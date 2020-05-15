@@ -36,7 +36,7 @@ The following tables describe the environment variables supported by the **crycl
 
 Variable | Description | Default
 -------- | ----------- | -------
-MONGO_URI | Connection string to access the MongoDB database | `mongo://mongodb:27017/cyclotron`
+MONGO_URL | Connection string to access the MongoDB database | `mongo://mongodb:27017/cyclotron`
 LISTEN_PORT | Port to run the Cyclotron Service on | `8087`
 BASE_PATH | Base path this server is hosted at; used by Swagger docs | `/`
 WEB_SERVER | URL for website using this service; Used for exporting Dashboards as PDFs via CasperJS | `http://cyclotron-site`
@@ -49,3 +49,13 @@ ELASTICSEARCH_INDEX_PREFIX | Prefix of Cyclotron indices | `cyclotron`
 ELASTICSEARCH_PAGE_VIEWS_INDEX_STRATEGY | Configure how frequently to rotate to new page views indicies | `monthly`
 ELASTICSEARCH_DATASOURCES_INDEX_STRATEGY | Configure how frequently to rotate to new datasources indicies | `monthly`
 ELASTICSEARCH_EVENTS_INDEX_STRATEGY | Configure how frequently to rotate to new event indicies | `yearly`
+AUTH_ENABLE | Enable or disable authentication | `False`
+AUTH_ADMINS | List of LDAP distinguished names of Cyclotron Admin users | `""`
+LDAP_URL | Connection string to access the LDAP authentication server | `ldap://ldap.example.com:389`
+LDAP_SEARCH_BASE | Directory location where user search should being | `ou=users, dc=example, dc=com`
+LDAP_SEARCH_FILTER | Filter allowing to match appropriate users | `(cn={{username}})`
+LDAP_ADMIN_DN | LDAP distinguished name of the user to process the directory queries; not the username; | `cn=cyclotron, ou=apps, dc=example, dc=com`
+LDAP_ADMIN_PASSWORD | Password of the user to process the directory queries | `""`
+LDAP_SEARCH_CATEGORIES | List of LDAP paths to search for auto-complete | `""`
+REQUEST_LIMIT | Limits the maximum size request that can be processed. May need to be increased to save very large Dashboards. | `5mb`
+TRUSTED_CA | List of addistional CAs to trust when making HTTP proxy requests | `""`
