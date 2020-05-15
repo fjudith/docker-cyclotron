@@ -59,3 +59,9 @@ LDAP_ADMIN_PASSWORD | Password of the user to process the directory queries | `"
 LDAP_SEARCH_CATEGORIES | List of LDAP paths to search for auto-complete | `""`
 REQUEST_LIMIT | Limits the maximum size request that can be processed. May need to be increased to save very large Dashboards. | `5mb`
 TRUSTED_CA | List of addistional CAs to trust when making HTTP proxy requests | `""`
+
+
+## References
+
+* [Cyclotron website](https://cyclotron.io)
+* [Expedia Cryclotron Repo](https://github.com/ExpediaInceCommercePlatform/cyclotron)
