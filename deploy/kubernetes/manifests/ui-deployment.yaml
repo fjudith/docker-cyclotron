@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyclotron-site
+  namespace: cyclotron
+  labels:
+    app: cyclotron
+    component: ui
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: cyclotron
+        component: ui
+    spec:
+      containers:
+      - image: docker.io/fjudith/cyclotron-site:latest
+        name: cyclotron-site
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "55M"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8088
+          initialDelaySeconds: 90
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8088
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+        env:
+        - name: WEB_SERVER
+          value: http://cyclotron-site:80
+        - name: LOAD_EXAMPLES_DASHBOARDS
+          value: True        
+        ports:
+        - containerPort:  8088
+          name:  http
+        volumeMounts:
+        - name: config
+          mountPath: /opt/app/cyclotron-site/js/conf/
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+        - name: cyclotron-site
+      restartPolicy: Always
+      imagePullPolicy: Always

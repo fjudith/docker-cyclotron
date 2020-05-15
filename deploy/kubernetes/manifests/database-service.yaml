@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: cyclotron
+spec:
+  selector:
+    app: cyclotron
+    component: database
+  type: ClusterIP
+  ports:
+  - name: mongo
+    port: 27017
+    targetPort: 27017

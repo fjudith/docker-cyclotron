@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: cyclotron
+  labels:
+    app: cyclotron
+    component: database
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: cyclotron
+        component: database
+    spec:
+      containers:
+      - image: docker.io/amd64/mongodb:latest
+        name: mongodb
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "55M"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8087
+          initialDelaySeconds: 90
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8087
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+        env:
+        - name: MONGO_HOST
+          value: mongodb
+        - name: MONGO_PORT
+          value: 27017
+        - name: MONGO_DB
+          value: cyclotron
+        ports:
+        - containerPort:  27017
+          name:  mongo
+        volumeMounts:
+        - name: datadir
+          mountPath: /data/db
+      volumes:
+      - name: datadir
+        emptyDir: {}
+      restartPolicy: Always
+      imagePullPolicy: Always

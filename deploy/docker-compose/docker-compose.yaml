@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mongodb:
+    image: docker.io/amd64/mongo:4-bionic
+    env_file:
+      - config/mongo.env
+    networks:
+      - cyclotron
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+  cyclotron-site:
+    build: ../../cyclotron-site/
+    image: docker.io/fjudith/cyclotron-site
+    networks:
+      - cyclotron
+    ports:
+      - 8088
+  cyclotron-svc:
+    build: ../../cyclotron-svc/
+    image: docker.io/fjudith/cyclotron-svc
+    networks:
+      - cyclotron
+
+networks:
+  cyclotron:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  mongo-config:
