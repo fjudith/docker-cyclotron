@@ -10,7 +10,7 @@ In this repository
 
 ## Description
 
-The Dockefile builds from `node:14` then `nginx:stable-alpine` for the **cyclotron-site** and `node:6-apline` for the **cyclotron-svc**.
+The Dockefile builds from `node:lts` then `nginx:stable-alpine` for the **cyclotron-site** and `node:lts-apline` for the **cyclotron-svc**.
 
 ## Features
 
@@ -29,7 +29,7 @@ docker-compose up -d
 
 ## Environment variables
 
-The following tables describe the environment variables supported by the **cryclotron-site** and **cyclotron-svc** containers.
+The following tables describe the environment variables supported by the **cyclotron-site** and **cyclotron-svc** containers.
 
 
 ### API service (cyclotron-svc)

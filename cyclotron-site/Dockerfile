@@ -1,5 +1,5 @@
 # Copies in our code and runs NPM Install
-FROM node:6 as builder
+FROM node:lts as builder
 RUN cd /tmp && \
     git clone https://github.com/ExpediaInceCommercePlatform/cyclotron && \
     mkdir -p /opt/app && \
@@ -12,21 +12,21 @@ RUN ["gulp", "vendor"]
 RUN ["gulp", "build"]
 
 # Lints Code
-FROM node:6 as linting
+FROM node:lts as linting
 RUN npm install -g gulp
 WORKDIR /opt/app/cyclotron-site
 COPY --from=builder /opt/app/cyclotron-site .
 RUN ["gulp", "lint"]
 
 # Runs Unit Tests
-FROM node:6 as unit-tests
+FROM node:lts as unit-tests
 RUN npm install -g gulp
 WORKDIR /opt/app/cyclotron-site
 COPY --from=builder /opt/app/cyclotron-site .
 RUN ["gulp", "test"]
 
 # Runs Minify
-FROM node:6 as minifier
+FROM node:lts as minifier
 RUN npm install -g gulp
 WORKDIR /opt/app/cyclotron-site
 COPY --from=builder /opt/app/cyclotron-site .
