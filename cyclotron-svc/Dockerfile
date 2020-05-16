@@ -1,44 +1,41 @@
-FROM node:6-alpine
+FROM node:lts-alpine
 
 LABEL maintainer="Florian JUDITH <florian.judith.b@gmail.com>"
 
-ENV SERVICENAME="cyclotron-svc" \
-    USER="node" \
-    DAEMON="node" \
-    ROOT_DIR="/opt/app/cyclotron-svc" \
-    SERVER="$ROOT_DIR/app.js" \
-    LOG_ROOT="$ROOT_DIR/log" \
-    LOG_FILE="$LOG_ROOT/app.log" \
-    LOCK_ROOT="/var/lock/subsys" \
-    LOCK_FILE="$LOCK_ROOT/$SERVICENAME"
-
-RUN cd /tmp && \
-    apk add --update --no-cache git jq python make && \
-    git clone https://github.com/ExpediaInceCommercePlatform/cyclotron && \
-    apk del git && \
-    mkdir -p /opt/app && \
-    mv cyclotron/cyclotron-svc /opt/app/ && \
-    mkdir -p /opt/app/cyclotron-svc/log && \
-    rm -rf /tmp/cyclotron
+ARG USER="cyclotron"
+ARG USER_ID="1009"
+ARG GROUP="cyclotron"
+ARG GROUP_ID="1009"
+ARG GOMPLATE_VERSION="3.6.0"
+ENV USER_HOME="/home/${USER}"
 
 USER root
 
-WORKDIR /opt/app/cyclotron-svc
+RUN  addgroup -g ${GROUP_ID} ${GROUP} && \
+     adduser -u ${USER_ID} -D -g '' -h ${USER_HOME} -G ${GROUP} ${USER}
 
-RUN npm install -g \
-    phantomjs-prebuilt \
-    casperjs && \
+RUN cd /tmp && \
+    apk add --update --no-cache curl git python make && \
+    git clone https://github.com/ExpediaInceCommercePlatform/cyclotron && \
+    apk del git && \
+    mv cyclotron/cyclotron-svc ${USER_HOME} && \
+    mkdir -p ${USER_HOME}/cyclotron-svc/log && \
+    rm -rf /tmp/cyclotron && \
+    curl -L -o /usr/local/bin/gomplate https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-amd64-slim && \
+    chmod +x /usr/local/bin/gomplate
+
+WORKDIR ${USER_HOME}/cyclotron-svc
+
+COPY --chown=${USER}:${USER} docker-entrypoint.sh /docker-entrypoint.sh
+COPY --chown=${USER}:${USER} templates/config.js ./config/config.tpl
+
+RUN chmod +x /docker-entrypoint.sh && \
+    chown -R ${USER}:${USER} ${USER_HOME}/cyclotron-svc && \
     npm install
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+USER ${USER}
 
-RUN chown node:node /docker-entrypoint.sh && \
-    chmod +x /docker-entrypoint.sh && \
-    chown -R node:node /opt/app/
+EXPOSE 8077
 
-USER node
-
-EXPOSE 8087
-
-ENTRYPOINT [ "/docker-entrypoint.sh" ]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["node", "app.js"]
