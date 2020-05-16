@@ -10,5 +10,5 @@ spec:
   type: ClusterIP
   ports:
   - name:  http
-    port:  8088
-    targetPort: 8088
+    port:  8087
+    targetPort: 8087
