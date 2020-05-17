@@ -50,7 +50,7 @@ RUN apk add --update --no-cache curl && \
     chmod +x /usr/local/bin/gomplate
 
 COPY --chown=cyclotron:cyclotron --from=builder /opt/app/cyclotron-site/_public ${USER_HOME}/cyclotron-site/_public
-COPY --chown=cyclotron:cyclotron templates/nginx.conf /etc/nginx/conf.d/cyclotron-site.conf
+COPY --chown=cyclotron:cyclotron templates/nginx.conf /etc/nginx/conf.d/cyclotron-site.tpl
 COPY --chown=cyclotron:cyclotron templates/configService.js ${USER_HOME}/cyclotron-site/_public/js/conf/configService.tpl
 
 COPY --chown=cyclotron:cyclotron docker-entrypoint.sh /docker-entrypoint.sh
