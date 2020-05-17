@@ -2,17 +2,13 @@ FROM node:lts-alpine
 
 LABEL maintainer="Florian JUDITH <florian.judith.b@gmail.com>"
 
-ARG USER="cyclotron"
-ARG USER_ID="1009"
-ARG GROUP="cyclotron"
-ARG GROUP_ID="1009"
 ARG GOMPLATE_VERSION="3.6.0"
-ENV USER_HOME="/home/${USER}"
+ENV USER_HOME="/home/cyclotron"
 
 USER root
 
-RUN  addgroup -g ${GROUP_ID} ${GROUP} && \
-     adduser -u ${USER_ID} -D -g '' -h ${USER_HOME} -G ${GROUP} ${USER}
+RUN  addgroup -g 1009 cyclotron && \
+     adduser -u 1009 -D -g '' -h ${USER_HOME} -G cyclotron cyclotron
 
 RUN cd /tmp && \
     apk add --update --no-cache curl git python make && \
@@ -26,14 +22,14 @@ RUN cd /tmp && \
 
 WORKDIR ${USER_HOME}/cyclotron-svc
 
-COPY --chown=${USER}:${USER} docker-entrypoint.sh /docker-entrypoint.sh
-COPY --chown=${USER}:${USER} templates/config.js ./config/config.tpl
+COPY --chown=cyclotron:cyclotron docker-entrypoint.sh /docker-entrypoint.sh
+COPY --chown=cyclotron:cyclotron templates/config.js ./config/config.tpl
 
 RUN chmod +x /docker-entrypoint.sh && \
-    chown -R ${USER}:${USER} ${USER_HOME}/cyclotron-svc && \
+    chown -R cyclotron:cyclotron ${USER_HOME}/cyclotron-svc && \
     npm install
 
-USER ${USER}
+USER cyclotron
 
 EXPOSE 8077
 
