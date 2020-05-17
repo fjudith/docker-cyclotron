@@ -8,8 +8,8 @@ export SPLUNK_HOST="splunk"
 
 echo "Writing configuration file from environment variables"
 
-gomplate -f /etc/nginx/conf.d/cyclotron-site.tpl
-             -o /etc/nginx/conf.d/cyclotron-site.conf
+gomplate -f /etc/nginx/conf.d/cyclotron-site.tpl \
+         -o /etc/nginx/conf.d/cyclotron-site.conf
 
 if ! [ -f ${USER_HOME}/cyclotron-site/_public/js/conf/configService.js ]; then
 
